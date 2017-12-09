@@ -22,7 +22,8 @@ RUN mkdir -p /go; \
     go get -u -v golang.org/x/tools/cmd/guru; \
     go get -u -v github.com/josharian/impl; \
     go get -u -v github.com/haya14busa/goplay/cmd/goplay; \
-    apt-get remove --purge curl git; \
+    apt-get remove --purge - curl git; \
+    apt-get autoremove -y; \
     rm -rf /go/src/*
 
 WORKDIR /home/theia
@@ -30,7 +31,7 @@ ADD theia-go-docker/${THEIAVERSION}.package.json ./package.json
 
 RUN yarn; \
     npx theia build; \
-    apt-get remove --purge python
+    apt-get remove --purge -y python
 EXPOSE 3000
 ENV SHELL /bin/ash
 ENTRYPOINT [ "npx", "theia", "start", "/home/project", "--hostname=0.0.0.0" ]
