@@ -4,7 +4,7 @@ ARG GOVERSION=1.9.2
 ENV PATH /go/bin:/usr/local/go/bin:$PATH
 ENV GOPATH /go
 RUN mkdir -p /go; \
-    apt-get update; apt-get install -y curl git python; \
+    apt-get update && apt-get install -y curl git python; \
     curl -sS https://storage.googleapis.com/golang/go${GOVERSION}.linux-amd64.tar.gz | tar -C /usr/local -xzf - ; \
     go version; \
     go get -u -v github.com/ramya-rao-a/go-outline; \
