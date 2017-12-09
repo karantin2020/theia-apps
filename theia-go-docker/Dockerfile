@@ -1,12 +1,12 @@
 FROM node:8-alpine
 ARG THEIAVERSION=latest
 ARG GOVERSION=1.9.2
-ENV PATH $PATH:/usr/local/go/bin
+ENV PATH /go/bin:/usr/local/go/bin:$PATH
 ENV GOPATH /go
 RUN mkdir -p /go; \
     mkdir -p /lib64 && ln -sfb /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2; \
     apk add --no-cache ca-certificates; \
-    apk add --no-cache --virtual=.build-dependencies curl git; \
+    apk add --no-cache --virtual=.build-dependencies curl git python; \
     curl -sS https://storage.googleapis.com/golang/go${GOVERSION}.linux-amd64.tar.gz | tar -C /usr/local -xzf - ; \
     go version; \
     go get -u -v github.com/ramya-rao-a/go-outline; \
