@@ -1,10 +1,10 @@
-FROM node:8-slim
+FROM node:8
 ARG THEIAVERSION=latest
 ARG GOVERSION=1.9.2
 ENV PATH /go/bin:/usr/local/go/bin:$PATH
 ENV GOPATH /go
 RUN mkdir -p /go; \
-    apt-get update && apt-get install -y curl git python; \
+    apt-get update && apt-get install -y curl; \
     curl -sS https://storage.googleapis.com/golang/go${GOVERSION}.linux-amd64.tar.gz | tar -C /usr/local -xzf - ; \
     go version; \
     go get -u -v github.com/ramya-rao-a/go-outline; \
@@ -22,8 +22,8 @@ RUN mkdir -p /go; \
     go get -u -v golang.org/x/tools/cmd/guru; \
     go get -u -v github.com/josharian/impl; \
     go get -u -v github.com/haya14busa/goplay/cmd/goplay; \
-    apt-get remove --purge - curl git; \
-    apt-get autoremove -y; \
+    apt-get -y remove --purge curl git; \
+    apt-get -y autoremove; \
     rm -rf /go/src/*
 
 WORKDIR /home/theia
@@ -31,7 +31,7 @@ ADD theia-go-docker/${THEIAVERSION}.package.json ./package.json
 
 RUN yarn; \
     npx theia build; \
-    apt-get remove --purge -y python
+    apt-get -y remove --purge python
 EXPOSE 3000
 ENV SHELL /bin/ash
 ENTRYPOINT [ "npx", "theia", "start", "/home/project", "--hostname=0.0.0.0" ]
