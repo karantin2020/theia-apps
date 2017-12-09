@@ -2,7 +2,9 @@ FROM node:8-alpine
 ARG THEIAVERSION=latest
 ARG GOVERSION=1.9.2
 ENV PATH $PATH:/usr/local/go/bin
-RUN mkdir -p /lib64 && ln -sfb /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2; \
+ENV GOPATH /go
+RUN mkdir -p /go; \
+    mkdir -p /lib64 && ln -sfb /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2; \
     apk add --no-cache ca-certificates; \
     apk add --no-cache --virtual=.build-dependencies curl git; \
     curl -sS https://storage.googleapis.com/golang/go${GOVERSION}.linux-amd64.tar.gz | tar -C /usr/local -xzf - ; \
@@ -22,10 +24,11 @@ RUN mkdir -p /lib64 && ln -sfb /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64
     go get -u -v golang.org/x/tools/cmd/guru; \
     go get -u -v github.com/josharian/impl; \
     go get -u -v github.com/haya14busa/goplay/cmd/goplay; \
-    apk del --purge .build-dependencies
+    apk del --purge .build-dependencies; \
+    rm -rf /go/src/*
 
 WORKDIR /home/theia
-ADD $THEIAVERSION.package.json ./package.json
+ADD theia-go-docker/${THEIAVERSION}.package.json ./package.json
 
 RUN yarn; \
     npx theia build
