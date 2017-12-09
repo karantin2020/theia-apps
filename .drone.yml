@@ -1,0 +1,25 @@
+workspace:
+  base: /home
+  path: theia
+
+pipeline:
+  publish:
+    group: dopub
+    image: plugins/docker
+    repo: node3030/theia-docker
+    secrets: [ docker_username, docker_password ]
+    dockerfile: theia-go-docker/Dockerfile
+    tag: [ latest, '0.3.1', '0.3' ]
+    when:
+      branch: master
+      event: push
+      
+  release:
+    group: dopub
+    image: plugins/docker
+    repo: node3030/docker-mattermost
+    secrets: [ docker_username, docker_password ]
+    dockerfile: theia-go-docker/Dockerfile
+    tags: ${DRONE_TAG##v}
+    when:
+      event: tag
